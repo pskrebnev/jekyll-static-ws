@@ -1,20 +1,11 @@
-# Dockerfile
-FROM jekyll/jekyll:latest
+# Create a Jekyll container froma Ruby Alpine image
+# At a min use Ruby 2.5 or later
+FROM ruby:2.7-alpine3.16
 
-WORKDIR /srv/jekyll
+# Add Jekyll dependencies to Alpine
+RUN apk update
+RUN apk add --no-cache build-base gcc cmake git
 
-# Copy the Gemfile and Gemfile.lock to install dependencies
-COPY Gemfile* ./
-
-# Install any needed packages specified in Gemfile
-
-RUN gem update --system
-RUN gem install bundler
-
-RUN bundle install
-
-# Copy the rest of the application code
-COPY . .
-
-CMD ["jekyll", "serve", "--host", "0.0.0.0"]
+# Update the Ruby bundler and install Jekyll
+RUN gem update bundler && gem install bundler jekyll
 
